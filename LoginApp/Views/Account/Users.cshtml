@@ -1,0 +1,99 @@
+﻿
+
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+</head>
+
+@model List<LoginApp.Models.User>
+
+@{
+    ViewData["Title"] = "Users List";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">User List</h2>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <input id="searchInput" class="form-control" type="text" placeholder="🔍 Search users..." onkeyup="filterUsers()">
+        </div>
+    </div>
+
+    <table class="table table-striped table-hover shadow">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Username</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="userTable">
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.Name</td>
+                    <td>@user.Email</td>
+                    <td>@user.Username</td>
+                    <td>
+                        <a href="/Account/Edit/@user.Id" class="btn btn-sm btn-primary">✏️ Edit</a>
+                        <a href="/Account/Delete/@user.Id" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">🗑️ Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-center mt-3">
+        <button id="prevPage" class="btn btn-secondary btn-sm">⬅️ Previous</button>
+        <span id="pageNumber" class="mx-3">Page 1</span>
+        <button id="nextPage" class="btn btn-secondary btn-sm">Next ➡️</button>
+    </div>
+</div>
+
+<script>
+    function filterUsers() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let rows = document.querySelectorAll("#userTable tr");
+
+        rows.forEach(row => {
+            let text = row.innerText.toLowerCase();
+            row.style.display = text.includes(input) ? "" : "none";
+        });
+    }
+
+    // Simple Pagination
+    let rowsPerPage = 5;
+    let tableRows = document.querySelectorAll("#userTable tr");
+    let currentPage = 1;
+
+    function showPage(page) {
+        let start = (page - 1) * rowsPerPage;
+        let end = start + rowsPerPage;
+
+        tableRows.forEach((row, index) => {
+            row.style.display = index >= start && index < end ? "" : "none";
+        });
+
+        document.getElementById("pageNumber").innerText = `Page ${page}`;
+    }
+
+    document.getElementById("prevPage").addEventListener("click", function() {
+        if (currentPage > 1) {
+            currentPage--;
+            showPage(currentPage);
+        }
+    });
+
+    document.getElementById("nextPage").addEventListener("click", function() {
+        if (currentPage * rowsPerPage < tableRows.length) {
+            currentPage++;
+            showPage(currentPage);
+        }
+    });
+
+    showPage(1);
+</script>
+
