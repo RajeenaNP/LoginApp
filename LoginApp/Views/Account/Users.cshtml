@@ -17,6 +17,9 @@
         <div class="col-md-6">
             <input id="searchInput" class="form-control" type="text" placeholder="🔍 Search users..." onkeyup="filterUsers()">
         </div>
+        <div class="col-md-6">
+            <button id="btnRegister" class="btn btn-primary">Register</button>
+        </div>
     </div>
 
     <table class="table table-striped table-hover shadow">
@@ -95,5 +98,9 @@
     });
 
     showPage(1);
+
+      document.getElementById("btnRegister").addEventListener("click", function () {
+        window.location.href = "/Account/Register"; // Change the URL to your actual controller/action
+    });
 </script>
 
